@@ -1,0 +1,41 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20.11.1'
+
+    - name: Install Dependencies
+      run: |
+        cd ComissionsCode
+        npm install
+
+    - name: Run Tests
+      run: |
+        cd ComissionsCode
+        npm test
+
+    - name: Run Tests with Coverage
+      run: |
+        cd ComissionsCode
+        npm run test -- --coverage
+
+    - name: Upload Coverage to GitHub
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage
+        path: ./ComissionsCode/coverage/lcov.info
